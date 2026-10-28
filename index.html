@@ -1,1244 +1,695 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SUPERVECTAR TV</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>SUPERVECTAR IPTV</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js"></script>
   <style>
     :root {
-      /* Dark Theme default */
-      --body-bg: #000;
-      --body-color: #ccc;
-      --sidebar-bg: #111;
-      --sidebar-border: #ccc;
-      --sidebar-shadow: 2px 0 12px #0a8fc980;
-      --heading-color: #f8fc05;
-      --heading-shadow: 0 0 8px #444444, 0 0 18px #444444, 0 0 32px #444444;
-      --btn-border: #444;
-      --btn-color: #aaa;
-      --btn-hover-border: #ccc;
-      --btn-hover-color: #ccc;
-      --btn-hover-shadow: 0 0 10px #ccc, 0 0 20px #ccc;
-      --btn-dinamica-border: #ccc;
-      --btn-dinamica-color: #ccc;
-      --btn-dinamica-shadow: 0 0 8px #ccc, 0 0 18px #ccc;
-      --btn-carregar-border: #ccc;
-      --btn-carregar-color: #ccc;
-      --btn-carregar-hover-border: #ccc;
-      --btn-carregar-hover-color: #ccc;
-      --btn-carregar-hover-shadow: 0 0 10px #ccc, 0 0 20px #ccc;
-      --input-bg: #222;
-      --input-color: #ccc;
-      --input-placeholder-color: #555;
-      --loading-color: #ccc;
-      --loading-shadow: none;
-      --content-bg: #111111;
-      --content-shadow: inset 0 0 15px #333333;
-      --top-header-color: #f8fc05;
-      --top-header-shadow: none;
-      --top-header-sub-color: #555;
-      --player-area-bg: #111111cc;
-      --player-area-border: #444444;
-      --player-area-shadow: none;
-      --video-shadow: none;
-      --player-btn-border: #555555;
-      --player-btn-color: #cccccc;
-      --player-btn-hover-bg: #444444;
-      --player-btn-hover-color: #eeeeee;
-      --player-btn-hover-shadow: none;
-      --toggle-btn-border: #555555;
-      --toggle-btn-color: #cccccc;
-      --toggle-btn-hover-bg: #444444;
-      --toggle-btn-hover-color: #eeeeee;
-      --toggle-btn-hover-shadow: none;
-      --wrapper-border: #333333;
-      --wrapper-bg: #111111;
-      --wrapper-shadow: none;
-      --wrapper-color: #cccccc;
-      --list-item-border-bottom: #333333;
-      --list-item-color: #cccccc;
-      --list-item-hover-bg: #333333;
-      --list-item-hover-color: #eeeeee;
-      --list-item-img-shadow: none;
-      --list-grade-border: #333333;
-      --list-grade-color: #cccccc;
-      --list-grade-hover-bg: #333333;
-      --list-grade-hover-border: #555555;
-      --list-grade-hover-shadow: none;
-      --list-grade-img-shadow: none;
-      --info-channel-color: #cccccc;
-      --info-channel-shadow: none;
-      --credits-color: #888888;
-      --credits-shadow: none;
+      color-scheme: dark;
+      --bg: #000;
+      --panel: #101010;
+      --panel-2: #171717;
+      --line: #343434;
+      --text: #d2d2d2;
+      --muted: #8b8b8b;
+      --yellow: #f8fc05;
+      --cyan: #00bfff;
+      --danger: #ff6b6b;
+      --radius: 12px;
     }
-
-
+    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--body-bg);
-      color: var(--body-color);
-      display: flex;
-      height: 100vh; /* Ensures full viewport height */
-      overflow: hidden; /* Prevents body scroll */
-      transition: background-color 0.5s, color 0.5s;
+      margin: 0; min-height: 100vh; height: 100vh; overflow: hidden;
+      display: flex; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
+    button, input, textarea, select { font: inherit; }
+    button { color: inherit; }
     .sidebar {
-      width: 300px;
-      background: var(--sidebar-bg);
-      padding: 20px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto; /* Allows sidebar content to scroll if too tall */
-      border-right: 2px solid var(--sidebar-border);
-      box-shadow: 2px 0 12px var(--sidebar-shadow);
-      flex-shrink: 0;
-      transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
-      min-width: 200px; /* Ensure sidebar doesn't become too narrow */
+      width: 270px; min-width: 230px; flex-shrink: 0;
+      padding: 18px 14px; display: flex; flex-direction: column; gap: 10px;
+      background: #0b0b0b; border-right: 1px solid var(--line);
+      overflow-y: auto;
     }
-    .sidebar h2 {
-      font-size: 26px;
-      color: var(--heading-color);
-      margin: 0 0 20px 0;
-      text-align: center;
-      user-select: none;
-      font-weight: 700;
-      text-shadow: var(--heading-shadow);
-      transition: color 0.5s, text-shadow 0.5s;
-      white-space: nowrap;
-      overflow: hidden; /* Prevents text from overflowing heading in sidebar */
-      text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    .brand {
+      color: var(--yellow); text-align: center; font-size: 22px;
+      font-weight: 850; letter-spacing: 1px; margin: 3px 0 8px;
+      text-shadow: 0 0 12px #f8fc0538;
     }
-    .btn {
-      background: none;
-      border: 2px solid var(--btn-border);
-      padding: 10px;
-      color: var(--btn-color);
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      white-space: nowrap;
-      transition: color 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.3s;
-      user-select: none;
-      box-sizing: border-box;
-      text-overflow: ellipsis; /* For buttons with very long text */
-      overflow: hidden;
+    .section-label {
+      color: var(--muted); font-size: 11px; letter-spacing: 1.5px;
+      font-weight: 750; margin: 8px 3px 2px; text-transform: uppercase;
     }
-    .btn:hover {
-      border-color: var(--btn-hover-border);
-      color: var(--btn-hover-color);
-      transform: scale(1.05);
-      box-shadow: var(--btn-hover-shadow);
+    .btn, .category-btn {
+      width: 100%; padding: 10px 12px; border-radius: 8px;
+      background: transparent; border: 1px solid #454545; cursor: pointer;
+      text-align: left; transition: .18s ease; overflow-wrap: anywhere;
     }
-    .btn.dinamica {
-      border-color: var(--btn-dinamica-border);
-      color: var(--btn-dinamica-color);
-      box-shadow: var(--btn-dinamica-shadow);
+    .btn:hover, .category-btn:hover, .category-btn.active {
+      color: var(--yellow); border-color: var(--yellow);
+      background: #f8fc050c;
     }
-    .btn.carregar {
-      border-color: var(--btn-carregar-border);
-      color: var(--btn-carregar-color);
+    .btn.primary { border-color: var(--yellow); color: var(--yellow); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .url-box { display: grid; gap: 8px; }
+    textarea, input[type="search"], input[type="url"] {
+      width: 100%; background: #202020; color: var(--text);
+      border: 1px solid #3b3b3b; border-radius: 8px; padding: 10px;
+      outline: none;
     }
-    .btn.carregar:hover {
-      border-color: var(--btn-carregar-hover-border);
-      color: var(--btn-carregar-hover-color);
-      box-shadow: var(--btn-carregar-hover-shadow);
-    }
-    .btn.url {
-      border-color: var(--btn-hover-border); /* Consistent with dynamic buttons */
-      color: var(--btn-hover-color); /* Consistent with dynamic buttons */
-      margin-top: 10px;
-    }
-    input[type=file] { display: none; }
-    label[for=fileInput] { cursor: pointer; user-select: none; }
-
-    #urlInputSidebar {
-      resize: vertical;
-      height: 80px;
-      min-height: 60px;
-      max-height: 150px;
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-      background: var(--input-bg);
-      color: var(--input-color);
-      font-size: 14px;
-      margin-top: 8px;
-      width: 100%;
-      box-sizing: border-box;
-      user-select: text;
-      transition: background-color 0.5s, color 0.5s;
-      font-family: 'Segoe UI', sans-serif;
-      line-height: 1.3;
-    }
-    #urlInputSidebar::placeholder {
-      color: var(--input-placeholder-color);
-    }
-
-    #loadingMessage {
-      user-select: none;
-      text-align: center;
-      font-weight: 600;
-      color: var(--loading-color);
-      text-shadow: var(--loading-shadow);
-      margin-bottom: 6px;
-      font-style: italic;
-      display: none;
-    }
-
+    textarea { min-height: 74px; resize: vertical; font-size: 13px; }
+    textarea:focus, input:focus { border-color: var(--yellow); }
+    input[type="file"] { display: none; }
     .content {
-      flex: 1; /* Allows content to grow and fill available space */
-      display: flex;
-      flex-direction: column;
-      padding: 20px 25px;
-      overflow: hidden; /* Prevents content itself from causing body scroll */
-      background: var(--content-bg);
-      box-shadow: var(--content-shadow);
-      transition: background-color 0.5s, box-shadow 0.5s;
-      user-select: none;
+      min-width: 0; flex: 1; display: flex; flex-direction: column;
+      padding: 18px 22px; overflow: hidden; gap: 12px;
     }
-    .top-header {
-      text-align: center;
-      margin-bottom: 10px;
-      user-select: none;
-      white-space: nowrap;
-      overflow: hidden; /* Prevents text from pushing header out */
-      text-overflow: ellipsis; /* Add ellipsis for overflowed text */
-      padding: 0 10px;
-      box-sizing: border-box;
-    }
+    .top-header { text-align: center; flex-shrink: 0; }
     .top-header h1 {
-      font-size: 30px;
-      color: var(--top-header-color);
-      font-weight: 700;
-      margin-bottom: 6px;
-      letter-spacing: 2px;
-      text-shadow: var(--top-header-shadow);
-      transition: color 0.5s, text-shadow 0.5s;
-      user-select: none;
-      white-space: nowrap;
-      overflow: hidden; /* Prevents text from pushing header out */
-      text-overflow: ellipsis;
-      line-height: 1;
+      color: var(--yellow); font-size: clamp(22px, 2.4vw, 31px);
+      margin: 0; letter-spacing: 2px; line-height: 1.15;
+      text-shadow: 0 0 14px #f8fc0525;
     }
-    .top-header p {
-      color: var(--top-header-sub-color);
-      font-size: 14px;
-      margin-top: 0;
-      transition: color 0.5s;
-    }
+    .top-header p { color: var(--muted); margin: 6px 0 0; font-size: 12px; }
     .player-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border: 2px solid var(--player-area-border);
-      border-radius: 12px;
-      padding: 15px;
-      background: var(--player-area-bg);
-      box-shadow: var(--player-area-shadow);
-      max-width: 640px; /* Limits the player area width */
-      width: 100%; /* Ensures it takes full width up to max-width */
-      margin: 0 auto 15px; /* Centers and provides bottom margin */
-      transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
-      box-sizing: border-box; /* Include padding in width calculation */
+      width: min(100%, 820px); margin: 0 auto; padding: 12px;
+      border: 1px solid #3b3b3b; border-radius: var(--radius);
+      background: #101010; flex-shrink: 0;
     }
     video {
-      width: 100%; /* Video takes 100% of its parent (.player-area)'s content width */
-      height: auto; /* Maintain aspect ratio */
-      max-width: 620px; /* Limits the video width within its padding */
-      border-radius: 12px;
-      background: #000;
-      box-shadow: var(--video-shadow);
-      user-select: none;
-      transition: box-shadow 0.5s;
-      display: block; /* Ensures no extra space below video */
+      display: block; width: 100%; max-height: min(45vh, 420px);
+      aspect-ratio: 16 / 9; object-fit: contain; background: #000;
+      border-radius: 8px;
     }
     .player-options {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      width: 100%; /* Take full width for wrapping */
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px; margin-top: 10px;
     }
-    .player-options button {
-      background: none;
-      border: 1.5px solid var(--player-btn-border);
-      color: var(--player-btn-color);
-      font-size: 15px;
-      cursor: pointer;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
-      user-select: none;
-      flex-grow: 1; /* Allow buttons to grow and shrink */
-      min-width: 80px; /* Prevent buttons from becoming too small */
-      max-width: 150px; /* Limit button width */
-      box-sizing: border-box;
+    .player-options .btn { width: auto; text-align: center; padding: 8px 13px; }
+    #infoCanal {
+      min-height: 22px; margin-top: 9px; text-align: center;
+      font-size: 14px; font-weight: 700; color: var(--yellow);
+      overflow-wrap: anywhere;
     }
-    .player-options button:hover {
-      background: var(--player-btn-hover-bg);
-      color: var(--player-btn-hover-color);
-      box-shadow: var(--player-btn-hover-shadow);
-      transform: scale(1.1);
+    #loadingMessage, #statusMessage {
+      display: none; text-align: center; color: var(--cyan);
+      font-size: 13px; margin: 7px 0 0;
     }
-    #toggleViewBtn {
-      margin: 10px auto 0;
-      background: none;
-      border: 2px solid var(--toggle-btn-border);
-      color: var(--toggle-btn-color);
-      padding: 8px 18px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      display: block;
-      max-width: 280px; /* Slightly wider button */
-      width: 100%;
-      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-      user-select: none;
-      box-sizing: border-box;
+    #statusMessage.error { color: var(--danger); }
+    #feitoPor { text-align: center; color: #777; font-size: 12px; margin-top: 5px; }
+    .list-toolbar {
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
     }
-    #toggleViewBtn:hover {
-      background: var(--toggle-btn-hover-bg);
-      color: var(--toggle-btn-hover-color);
-      box-shadow: var(--toggle-btn-hover-shadow);
-      transform: scale(1.05);
-    }
+    .list-toolbar input { flex: 1; min-width: 0; }
+    .list-toolbar .btn { width: auto; white-space: nowrap; }
     .canais-wrapper {
-      flex: 1; /* Crucial: Allows channel list to take up remaining vertical space */
-      margin-top: 10px;
-      border: 1px solid var(--wrapper-border);
-      border-radius: 10px;
-      padding: 12px;
-      background: var(--wrapper-bg);
-      min-height: 150px; /* Ensures wrapper is visible even with few channels */
-      overflow-y: auto; /* Allows channel list to scroll independently */
-      box-shadow: var(--wrapper-shadow);
-      color: var(--wrapper-color);
-      transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s, color 0.5s;
+      flex: 1; min-height: 110px; overflow: auto;
+      border: 1px solid var(--line); border-radius: 10px;
+      padding: 10px; background: #0c0c0c;
     }
     #listaCanais {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      list-style: none; padding: 0; margin: 0; display: flex;
+      flex-direction: column; gap: 5px;
     }
     #listaCanais li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 10px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--list-item-border-bottom);
-      color: var(--list-item-color);
-      transition: background 0.3s, color 0.3s;
-      border-radius: 6px;
-      user-select: none;
-      white-space: nowrap; /* Prevents channel names from wrapping in list mode */
-      overflow: hidden;
-      text-overflow: ellipsis;
+      min-width: 0; display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border: 1px solid transparent; border-radius: 8px;
+      cursor: pointer; color: var(--text); background: transparent;
     }
-    #listaCanais li:last-child {
-        border-bottom: none; /* No border for the last item in list view */
-    }
-    #listaCanais li:hover {
-      background: var(--list-item-hover-bg);
-      color: var(--list-item-hover-color);
+    #listaCanais li:hover, #listaCanais li.selected {
+      border-color: #5c5c00; background: #f8fc050d; color: var(--yellow);
     }
     #listaCanais li img {
-      width: 40px;
-      height: 25px;
-      object-fit: contain;
-      border-radius: 4px;
-      box-shadow: var(--list-item-img-shadow);
-      user-select: none;
-      loading: lazy;
-      flex-shrink: 0; /* Prevents image from shrinking */
+      width: 42px; height: 28px; object-fit: contain; flex-shrink: 0;
+      background: #161616; border-radius: 4px;
     }
     #listaCanais li span {
-      user-select: none;
-      flex-grow: 1; /* Allow channel name to take available space */
-      min-width: 0; /* Allow text to shrink below its content size */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    #listaCanais.grade {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 12px;
+    #listaCanais.grade, #listaCanais.grade-2col {
+      flex-direction: row; flex-wrap: wrap; align-content: flex-start;
     }
     #listaCanais.grade li {
-      flex-direction: column;
-      border: 1px solid var(--list-grade-border);
-      max-width: calc(33.333% - 8px); /* 3 columns with gap */
-      min-width: 120px; /* Minimum width for grid item */
-      padding: 8px;
-      border-radius: 10px;
-      align-items: center;
-      cursor: pointer;
-      transition: background 0.3s, border-color 0.3s;
-      color: var(--list-grade-color);
-      user-select: none;
-      white-space: normal; /* Allow text to wrap in grid mode */
-      overflow: hidden; /* Hide any overflow */
-      text-overflow: ellipsis; /* Not typically useful for multi-line but good fallback */
-      box-sizing: border-box; /* Include padding/border in width */
-      border-bottom: 1px solid var(--list-grade-border); /* Consistent border */
+      flex: 0 0 calc(25% - 6px); min-width: 130px; max-width: calc(25% - 6px);
+      flex-direction: column; text-align: center; padding: 9px;
+      border-color: #292929; white-space: normal;
     }
-    #listaCanais.grade li:hover {
-      background: var(--list-grade-hover-bg);
-      border-color: var(--list-grade-hover-border);
-      color: var(--list-item-hover-color); /* Use dark theme item hover color */
-      box-shadow: var(--list-grade-hover-shadow);
-    }
-    #listaCanais.grade li img {
-      width: 100%;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: var(--list-grade-img-shadow);
-      margin-bottom: 6px;
-      user-select: none;
-      loading: lazy;
-    }
-    #listaCanais.grade li span {
-      text-align: center;
-      font-weight: 600;
-      font-size: 14px;
-      user-select: none;
-      word-break: break-word; /* Allow long words to break */
-      white-space: normal; /* Allow text to wrap */
-      overflow: hidden; /* Hide overflow */
-      display: -webkit-box; /* For multi-line ellipsis */
-      -webkit-line-clamp: 2; /* Show up to 2 lines */
-      -webkit-box-orient: vertical;
-    }
-    #listaCanais.grade-2col {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 14px;
+    #listaCanais.grade li img { width: 100%; height: 74px; }
+    #listaCanais.grade li span, #listaCanais.grade-2col li span {
+      white-space: normal; overflow: hidden; display: -webkit-box;
+      -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+      overflow-wrap: anywhere; font-size: 13px;
     }
     #listaCanais.grade-2col li {
-      flex-direction: column;
-      border: 1px solid var(--list-grade-border);
-      max-width: calc(50% - 7px); /* 2 columns with gap */
-      min-width: 100px; /* Ensure it doesn't get too small */
-      padding: 10px;
-      border-radius: 12px;
-      align-items: center;
-      cursor: pointer;
-      transition: background 0.3s, border-color 0.3s;
-      color: var(--list-grade-color);
-      user-select: none;
-      white-space: normal;
-      overflow: hidden;
-      box-sizing: border-box;
-      border-bottom: 1px solid var(--list-grade-border); /* Consistent border */
+      flex: 0 0 calc(50% - 4px); min-width: 110px; max-width: calc(50% - 4px);
+      flex-direction: column; text-align: center; padding: 9px;
+      border-color: #292929;
     }
-    #listaCanais.grade-2col li:hover {
-      background: var(--list-grade-hover-bg);
-      border-color: var(--list-grade-hover-border);
-      color: var(--list-item-hover-color);
-      box-shadow: var(--list-grade-hover-shadow);
+    #listaCanais.grade-2col li img { width: 100%; height: 82px; }
+    .empty-state { text-align: center; color: var(--muted); padding: 26px 10px; }
+    .small-note { color: #777; font-size: 11px; line-height: 1.4; }
+    @media (max-width: 850px) {
+      body { height: auto; min-height: 100vh; overflow: auto; flex-direction: column; }
+      .sidebar { order: 0; width: 100%; min-width: 0; max-height: none; padding: 12px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { font-size: 20px; margin: 0; }
+      .category-list { display: flex; flex-wrap: wrap; gap: 6px; }
+      .category-btn { width: auto; max-width: 100%; padding: 8px 10px; }
+      .content { overflow: visible; padding: 14px 10px 18px; }
+      .player-area { padding: 9px; }
+      video { max-height: 48vh; }
+      .canais-wrapper { flex: initial; max-height: 360px; }
+      #listaCanais.grade li { flex-basis: calc(33.333% - 5px); max-width: calc(33.333% - 5px); min-width: 95px; }
     }
-    #listaCanais.grade-2col li img {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: var(--list-grade-img-shadow);
-      margin-bottom: 8px;
-      user-select: none;
-      loading: lazy;
+    @media (max-width: 520px) {
+      .top-header h1 { letter-spacing: 1px; }
+      .list-toolbar { flex-wrap: wrap; }
+      .list-toolbar input { flex-basis: 100%; }
+      .list-toolbar .btn { flex: 1; }
+      #listaCanais.grade li { flex-basis: calc(50% - 4px); max-width: calc(50% - 4px); }
+      #listaCanais.grade-2col li { flex-basis: 100%; max-width: 100%; flex-direction: row; text-align: left; }
+      #listaCanais.grade-2col li img { width: 72px; height: 48px; }
+      .player-options .btn { flex: 1 1 130px; }
     }
-    #listaCanais.grade-2col li span {
-      text-align: center;
-      font-weight: 700;
-      font-size: 15px;
-      user-select: none;
-      word-break: break-word;
-      white-space: normal;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-    #infoCanal {
-      margin-top: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      text-align: center;
-      color: var(--info-channel-color);
-      text-shadow: var(--info-channel-shadow);
-      user-select: none;
-      min-height: 24px;
-      transition: color 0.5s, text-shadow 0.5s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%; /* Ensure it spans full width for ellipsis */
-    }
-    #feitoPor {
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--credits-color);
-      text-align: center;
-      user-select: none;
-      text-shadow: var(--credits-shadow);
-      transition: color 0.5s, text-shadow 0.5s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
-    }
-
-    /* Media Queries for enhanced responsiveness */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-        height: auto; /* Allow body to determine height based on content */
-        overflow-y: auto; /* Allow scrolling on body if content exceeds screen height */
-      }
-      .sidebar {
-        width: 100%;
-        height: auto;
-        padding: 10px 8px; /* Slightly more compact */
-        border-right: none;
-        border-bottom: 2px solid var(--sidebar-border);
-        box-shadow: inset 0 -3px 20px var(--sidebar-shadow);
-        flex-direction: column;
-        gap: 8px; /* More compact gap */
-        overflow-x: hidden;
-        min-width: auto; /* Remove min-width on small screens */
-      }
-      .sidebar h2 {
-        font-size: 20px;
-        margin: 0; /* Remove top margin on small screens */
-        white-space: normal; /* Allow wrapping for long titles */
-        text-overflow: clip; /* Clip for multiple lines, ellipsis less suitable */
-        overflow: visible; /* Let it flow */
-      }
-      .btn {
-        font-size: 14px;
-        padding: 8px 12px; /* More compact padding */
-        white-space: normal;
-        word-break: break-word;
-        min-height: 38px; /* Ensure a minimum tap target size */
-      }
-      #urlInputSidebar {
-        height: 60px;
-        min-height: 50px;
-        max-height: 100px;
-      }
-      .content {
-        padding: 15px 10px 20px; /* Reduced padding */
-      }
-      .top-header h1 {
-        font-size: 24px; /* Smaller header on mobile */
-      }
-      .player-area {
-        max-width: 100%;
-        margin: 15px auto 10px;
-        padding: 10px; /* Reduced padding */
-      }
-      video {
-        max-width: 100%;
-        border-radius: 8px;
-      }
-      .player-options {
-        gap: 10px; /* More compact options */
-      }
-      .player-options button {
-        font-size: 14px;
-        padding: 6px 16px;
-        min-width: 70px;
-        max-width: none; /* Allow full width if needed */
-      }
-      #toggleViewBtn {
-        max-width: 100%;
-        padding: 8px 14px;
-        font-size: 15px;
-      }
-      .canais-wrapper {
-        max-height: 250px; /* Smaller max height for scrolling on mobile */
-        min-height: 120px; /* Ensure visibility */
-        margin-top: 15px;
-        padding: 8px; /* Reduced padding */
-        border-radius: 8px;
-      }
-      #listaCanais li {
-        font-size: 13px;
-        padding: 5px 8px;
-        gap: 8px;
-      }
-      #listaCanais li img {
-        width: 35px;
-        height: 22px;
-      }
-      #listaCanais.grade li {
-        max-width: calc(50% - 6px); /* 2 columns on mobile for grid */
-        padding: 6px;
-        font-size: 13px;
-      }
-      #listaCanais.grade li img {
-        height: 70px; /* Smaller images in mobile grid */
-      }
-      #listaCanais.grade li span {
-        font-size: 13px;
-        -webkit-line-clamp: 2;
-      }
-      #listaCanais.grade-2col li {
-        max-width: calc(100% - 0px); /* 1 column on mobile for compact grid */
-        min-width: auto;
-        padding: 8px;
-      }
-      #listaCanais.grade-2col li img {
-        height: 80px;
-      }
-      #listaCanais.grade-2col li span {
-        font-size: 14px;
-        -webkit-line-clamp: 2;
-      }
-      #infoCanal, #feitoPor {
-        font-size: 14px; /* Smaller text for info/credits */
-      }
-    }
-
-    /* Landscape orientation on mobile devices */
     @media (orientation: landscape) and (max-width: 900px) {
-        body {
-            flex-direction: row; /* Revert to row for landscape if screen width allows */
-            height: 100vh; /* Keep full height */
-            overflow: hidden; /* Prevent body scroll */
-        }
-        .sidebar {
-            width: 200px; /* Smaller sidebar in landscape */
-            min-width: 150px;
-            height: 100%;
-            border-bottom: none;
-            border-right: 2px solid var(--sidebar-border);
-            box-shadow: 2px 0 12px var(--sidebar-shadow);
-        }
-        .content {
-            flex: 1;
-            padding: 10px 15px; /* More compact */
-            overflow-y: auto; /* Allow content to scroll vertically if needed */
-        }
-        .player-area {
-            max-width: none; /* Allow player to take more width */
-            width: 90%; /* Take 90% of available content width */
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-        video {
-            max-width: none;
-            height: auto;
-        }
-        .canais-wrapper {
-            flex: 1; /* Allow to grow */
-            min-height: 100px; /* Ensure visibility */
-            max-height: none; /* No max height, let flexbox manage */
-            overflow-y: auto; /* Always scroll if content overflows */
-        }
-        #listaCanais.grade li {
-            max-width: calc(25% - 9px); /* Aim for 4 columns in landscape grid */
-        }
-        #listaCanais.grade-2col li {
-            max-width: calc(33.333% - 9.333px); /* Aim for 3 columns in landscape compact grid */
-        }
+      body { height: 100vh; min-height: 0; overflow: hidden; flex-direction: row; }
+      .sidebar { width: 200px; min-width: 160px; height: 100%; overflow-y: auto; border-bottom: 0; border-right: 1px solid var(--line); }
+      .category-list { display: flex; flex-direction: column; }
+      .category-btn { width: 100%; }
+      .content { overflow: auto; padding: 10px; }
+      .player-area { width: min(100%, 700px); }
+      video { max-height: 38vh; }
+      .canais-wrapper { min-height: 100px; max-height: none; }
     }
   </style>
 </head>
 <body>
-  <div class="content">
-    <div class="top-header">
-      <h1>SUPERVECTAR IPTV</h1>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">SUPERVECTAR IPTV</div>
+    <div class="section-label">Cargar canales</div>
+    <label class="btn primary" for="fileInput">📁 Abrir archivo de lista</label>
+    <input type="file" id="fileInput" accept=".m3u,.m3u8,.txt,.json,.w3u">
+    <div class="url-box">
+      <textarea id="urlInputSidebar" placeholder="Pega aquí la URL de tu lista M3U/M3U8/JSON…" aria-label="URL de lista"></textarea>
+      <button class="btn primary" id="loadUrlBtn" type="button">⬇ Cargar URL</button>
     </div>
-    <div class="player-area">
-      <video id="videoPlayer" controls crossorigin="anonymous"></video>
-      <div class="player-options">  
-		<button onclick="window.location.reload()">🌀Reiniciar Lista</button>
+    <p class="small-note">Usa únicamente listas y emisiones que tengas autorización para reproducir.</p>
+    <div class="section-label">Categorías</div>
+    <div class="category-list" id="categoryList">
+      <button class="category-btn active" data-category="Todos" type="button">📺 Todos los canales</button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="top-header">
+      <h1>SUPERVECTAR IPTV</h1>
+      <p>Tu reproductor de canales</p>
+    </header>
+
+    <section class="player-area" aria-label="Reproductor">
+      <video id="videoPlayer" controls playsinline preload="metadata"></video>
+      <div class="player-options">
+        <button class="btn" id="restartBtn" type="button">🌀 Reiniciar lista</button>
+        <button class="btn" id="viewBtn" type="button">🔲 Vista cuadrícula</button>
+        <button class="btn" id="stopBtn" type="button">⏹ Detener</button>
       </div>
-      <div id="loadingMessage">Cargando lista... Por favor, Espere.</div>
-      <div id="infoCanal" aria-live="polite"></div>
-      <div id="feitoPor">SI NO VA ACTIVA UN VPN</div>
+      <div id="loadingMessage" role="status" aria-live="polite">Cargando…</div>
+      <div id="statusMessage" role="status" aria-live="polite"></div>
+      <div id="infoCanal" aria-live="polite">Selecciona una lista para comenzar</div>
+      <div id="feitoPor">Si una emisión no funciona, comprueba la URL y los permisos del servidor.</div>
+    </section>
+
+    <div class="list-toolbar">
+      <input type="search" id="searchInput" placeholder="Buscar canal…" aria-label="Buscar canal">
+      <button class="btn" id="listBtn" type="button">📋 Vista lista</button>
     </div>
     <div class="canais-wrapper">
-      <ul id="listaCanais"></ul>
+      <ul id="listaCanais">
+        <li class="empty-state">Carga una lista para ver los canales.</li>
+      </ul>
     </div>
-  </div>
+  </main>
+   <script>
+    (() => {
+      'use strict';
 
-  <div class="sidebar" id="sidebar">
-    <h2> CATEGORIAS </h2>
-    <button class="btn dinamica" onclick="mostrar canales('Todos')">📺 Todos Los Canales</button>
-    <input type="file" id="fileInput" accept=".m3u, .m3u8, .txt, .json, .w3u" style="display:none" />
-  </div>
-  
-  <script>
-    const fileInput = document.getElementById('fileInput');
-    const listaCanais = document.getElementById('listaCanais');
-    const videoPlayer = document.getElementById('videoPlayer');
-    const urlInputSidebar = document.getElementById('urlInputSidebar');
-    const sidebar = document.getElementById('sidebar');
-    const infoCanal = document.getElementById('infoCanal');
-    const toggleViewBtn = document.getElementById('toggleViewBtn');
-    const loadingMessage = document.getElementById('loadingMessage');
+      const fileInput = document.getElementById('fileInput');
+      const listaCanais = document.getElementById('listaCanais');
+      const videoPlayer = document.getElementById('videoPlayer');
+      const urlInputSidebar = document.getElementById('urlInputSidebar');
+      const categoryList = document.getElementById('categoryList');
+      const infoCanal = document.getElementById('infoCanal');
+      const loadingMessage = document.getElementById('loadingMessage');
+      const statusMessage = document.getElementById('statusMessage');
+      const searchInput = document.getElementById('searchInput');
+      const viewBtn = document.getElementById('viewBtn');
+      const listBtn = document.getElementById('listBtn');
 
-    let canais = [];
-    let categorias = [];
-    let hls = null;
-    let categoriaAtual = 'Todos';
-    let canalAtual = '';
-    let modoExibicao = 1;
+      let canales = [];
+      let categoriaActual = 'Todos';
+      let canalActual = null;
+      let hls = null;
+      let modoVista = 0;
+      let ultimaFuente = null;
 
-    // --- CRITICAL CONFIGURATION ---
-    // IMPORTANT: Your configured CORS proxy server URL.
-    // Example: 'https://my-proxy.com/' (Note the trailing slash)
-    const CORS_PROXY_URL = '';
+      // Lista predeterminada; el servidor debe permitir solicitudes CORS.
+      const AUTO_LOAD_URL = 'http://mitv.netinc.org:8691/get.php?username=697222878p9&password=Sw4qyXXVUTEH&type=m3u_plus';
 
-    // --- AUTO LOAD URL (Optional) ---
-    // If you want to automatically load a list when the page loads, put its URL here.
-    // Example: 'https://raw.githubusercontent.com/la22lo/sports/main/futbol.m3u'
-    const AUTO_LOAD_URL = 'http://qt300.jfxwvxv.top:8080/get.php?username=restream&password=restream&type=m3u_plus';
-
-
-    fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (!file) return;
-      const ext = file.name.split('.').pop().toLowerCase();
-      if (!['m3u', 'm3u8', 'txt', 'json', 'w3u'].includes(ext)) {
-        alert('Por favor, selecione un archivo con extension .m3u, .m3u8, .txt');
-        this.value = '';
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        alert(`Archivo cargado: ${file.name}`);
-        if (ext === 'json') {
-            try {
-                const jsonData = JSON.parse(e.target.result);
-                processarJSONData(jsonData);
-            } catch (error) {
-                alert('Erro ao processar arquivo JSON: ' + error.message);
-                console.error('JSON parsing error:', error);
-            }
-        } else if (ext === 'w3u') {
-            processarW3UAsync(e.target.result);
-        } else {
-            processarM3UAsync(e.target.result);
-        }
-      };
-      reader.readAsText(file);
-      this.value = '';
-    });
-
-    /**
-     * Determines if a given URL should be routed through the CORS proxy.
-     * This is crucial for external URLs, especially those known to cause CORS issues,
-     * or those requiring specific headers that the proxy can inject.
-     * @param {string} url The URL to check.
-     * @returns {boolean} True if the URL should use the proxy, false otherwise.
-     */
-    function shouldUseProxy(url) {
-        if (!CORS_PROXY_URL || CORS_PROXY_URL === '' || CORS_PROXY_URL === 'YOUR_CORS_PROXY_URL_HERE') {
-            return false; // Proxy not configured or is the default placeholder
-        }
-
-        try {
-            const urlObj = new URL(url);
-            // Check if the URL is external (different origin)
-            if (urlObj.origin !== window.location.origin) {
-                return true;
-            }
-            // Check for known problematic extensions/patterns
-            const lowerCaseUrl = url.toLowerCase();
-            return lowerCaseUrl.includes('.php') ||
-                   lowerCaseUrl.includes('pastebin.com') ||
-                   lowerCaseUrl.match(/\.(short|bit|tiny)url\.com/i) ||
-                   lowerCaseUrl.includes('raw.githubusercontent.com'); // GitHub raw content often has CORS issues
-        } catch (e) {
-            console.warn(`Invalid URL format detected for proxy check: ${url}. Assuming external.`);
-            // If URL is malformed, better to try with proxy to avoid errors
-            return true;
-        }
-    }
-
-    /**
-     * Fetches content from a URL, optionally routing through the CORS proxy.
-     * @param {string} url The original URL to fetch.
-     * @returns {Promise<Response>} The fetch response.
-     */
-    async function fetchWithProxy(url) {
-        let fetchUrl = url;
-        const useProxy = shouldUseProxy(url);
-
-        if (useProxy) {
-            fetchUrl = `${CORS_PROXY_URL}${encodeURIComponent(url)}`;
-            console.log(`Using proxy for fetch: ${url}`);
-        } else {
-            console.log(`Fetching directly: ${url}`);
-        }
-
-        return fetch(fetchUrl);
-    }
-
-    async function carregarListaURL() {
-        const url = urlInputSidebar.value.trim();
-        if (!url) {
-            return alert('Introduzca una URL válida!');
-        }
-
-        try {
-            loadingMessage.style.display = 'block';
-            loadingMessage.textContent = 'Cargando lista URL... Por favor, Espere.';
-
-            const res = await fetchWithProxy(url);
-
-            if (!res.ok) {
-                throw new Error(`Erro HTTP: ${res.status} - ${res.statusText}`);
-            }
-
-            const contentType = res.headers.get('content-type') || '';
-            const lowerCaseUrl = url.toLowerCase();
-            let rawContent;
-
-            // Prioritize content type, then URL extension, then content analysis
-            if (contentType.includes('application/json') || lowerCaseUrl.endsWith('.json')) {
-                const jsonData = await res.json();
-                processarJSONData(jsonData);
-            } else if (contentType.includes('application/x-mpegURL') || contentType.includes('audio/mpegurl') || lowerCaseUrl.endsWith('.m3u8') || lowerCaseUrl.endsWith('.m3u')) {
-                rawContent = await res.text();
-                await processarM3UAsync(rawContent);
-            } else if (lowerCaseUrl.endsWith('.w3u')) {
-                rawContent = await res.text();
-                await processarW3UAsync(rawContent);
-            } else if (contentType.includes('text/plain') || lowerCaseUrl.endsWith('.txt') || lowerCaseUrl.includes('.php')) {
-                rawContent = await res.text();
-                if (rawContent.includes('#EXTM3U')) {
-                    await processarM3UAsync(rawContent);
-                } else if (rawContent.includes('#EXTGRP')) {
-                    await processarW3UAsync(rawContent);
-                } else {
-                    alert('El Contenido cargado, o el formato de la lista puede no ser M3U/M3U8/TXT. Intentando reproducir la URL directamente.');
-                    if (url.match(/\.(m3u8|mp4|ts|mov|avi|webm|flv)$/i)) {
-                        reproduzirStream({ url: url, nome: 'Stream Direto da URL' });
-                    } else {
-                        alert('No fue posible identificar el formato de la lista o stream. Por favor, verifique la URL.');
-                    }
-                }
-            } else if (url.match(/\.(mp4|ts|mov|avi|webm|flv)$/i)) { // Direct video files
-                reproduzirStream({ url: url, nome: 'Stream Direto da URL' });
-            } else {
-                // Fallback: try to parse as text, then as direct stream
-                rawContent = await res.text();
-                if (rawContent.includes('#EXTM3U')) {
-                    await processarM3UAsync(rawContent);
-                } else if (rawContent.includes('#EXTGRP')) {
-                    await processarW3UAsync(rawContent);
-                } else if (url.match(/\.(m3u8|mp4|ts|mov|avi|webm|flv)$/i)) {
-                    reproduzirStream({ url: url, nome: 'Stream Direto da URL' });
-                } else {
-                    alert('No fue posible identificar el formato de la lista o stream. Por favor, verifique la URL o el contenido.');
-                }
-            }
-
-            urlInputSidebar.value = '';
-        } catch (error) {
-            console.error('Error al cargar la lista de la URL:', error);
-            alert(`Error al cargar la lista URL. Detalles: ${error.message}. Verifique que la URL es correcta, y el acceso a su CORS_PROXY_URL está funcionando.`);
-        } finally {
-            loadingMessage.style.display = 'none';
-        }
-    }
-
-
-    function processarJSONData(jsonData) {
-        canais = [];
-        const setCategorias = new Set();
-
-        if (Array.isArray(jsonData)) {
-            jsonData.forEach(item => {
-                if (item.name && item.url) {
-                    const nome = item.name.trim();
-                    const grupo = item.group ? item.group.toLowerCase() : 'todo';
-                    const url = item.url.trim();
-                    const logo = item.logo ? item.logo.trim() : '';
-                    const userAgent = item.user_agent || '';
-                    const referer = item.referer || '';
-                    const origin = item.origin || '';
-
-                    canais.push({ nome, grupo, url, logo, userAgent, referer, origin });
-                    setCategorias.add(grupo);
-                }
-            });
-        } else {
-            alert('Formato JSON inesperado. Por favor, verifique la estructura del JSON.');
-            return;
-        }
-
-        categorias = Array.from(setCategorias).sort();
-        generarBotoesCategorias();
-        if(canais.length > 0 && !videoPlayer.src) {
-            reproduzirStream(canais[0]);
-        }
-        mostrarCanais(categoriaAtual);
-    }
-
-    async function processarW3UAsync(texto) {
-        canais = [];
-        const setCategorias = new Set();
-        const lines = texto.split(/\r?\n/);
-        const chunkSize = 500;
-        let i = 0;
+      function setLoading(message = 'Cargando…') {
+        loadingMessage.textContent = message;
         loadingMessage.style.display = 'block';
-        loadingMessage.textContent = 'Procesando lista W3U...';
+        setStatus('');
+      }
 
-        while(i < lines.length) {
-            const chunk = lines.slice(i, i + chunkSize);
-            for (let j = 0; j < chunk.length; j++) {
-                if (chunk[j].startsWith('#EXTINF:')) {
-                    const attributes = chunk[j].match(/(.*?)(?:,(.*))?$/);
-                    const lineAttributes = attributes && attributes[1] ? attributes[1] : '';
-                    const nome = attributes && attributes[2] ? attributes[2].trim() : 'Unknown Channel';
-
-                    const grupoMatch = lineAttributes.match(/group-title="([^"]+)"/i) || lineAttributes.match(/EXTGRP:([^,]+)/i);
-                    const grupo = grupoMatch ? grupoMatch[1].toLowerCase() : 'todo';
-
-                    const logoMatch = lineAttributes.match(/tvg-logo="([^"]+)"/i);
-                    const logo = logoMatch ? logoMatch[1] : '';
-
-                    const userAgentMatch = lineAttributes.match(/x-user-agent="([^"]+)"/i);
-                    const userAgent = userAgentMatch ? userAgentMatch[1] : '';
-
-                    const refererMatch = lineAttributes.match(/x-referer="([^"]+)"/i);
-                    const referer = refererMatch ? refererMatch[1] : '';
-
-                    const originMatch = lineAttributes.match(/x-origin="([^"]+)"/i);
-                    const origin = originMatch ? originMatch[1] : '';
-
-                    const url = (chunk[j + 1] && chunk[j + 1].startsWith('http')) ? chunk[j + 1].trim() : '';
-
-                    if (url) {
-                        canais.push({ nome, grupo, url, logo, userAgent, referer, origin });
-                        setCategorias.add(grupo);
-                    }
-                }
-                // Add more W3U specific parsing here if needed
-            }
-            i += chunkSize;
-            await new Promise(resolve => setTimeout(resolve, 10));
-        }
-        categorias = Array.from(setCategorias).sort();
-        generarBotoesCategorias();
-        if(canais.length > 0 && !videoPlayer.src) {
-            reproduzirStream(canais[0]);
-        }
+      function hideLoading() {
         loadingMessage.style.display = 'none';
-        alert('Lista W3U procesando. Canales cargados.');
-        mostrarCanais(categoriaAtual);
-    }
+      }
 
-    async function processarM3UAsync(texto) {
-      canais = [];
-      categorias = [];
-      const setCategorias = new Set();
-      const lines = texto.split(/\r?\n/);
-      const chunkSize = 500;
-      let i = 0;
-      loadingMessage.style.display = 'block';
-      loadingMessage.textContent = 'Procesando lista M3U/TXT...';
+      function setStatus(message, isError = false) {
+        statusMessage.textContent = message;
+        statusMessage.classList.toggle('error', isError);
+        statusMessage.style.display = message ? 'block' : 'none';
+      }
 
-      while(i < lines.length) {
-        const chunk = lines.slice(i, i + chunkSize);
-        for (let j = 0; j < chunk.length; j++) {
-          if (chunk[j].startsWith('#EXTINF:')) {
-            const attributes = chunk[j].match(/(.*?)(?:,(.*))?$/);
-            const lineAttributes = attributes && attributes[1] ? attributes[1] : '';
-            const nome = attributes && attributes[2] ? attributes[2].trim() : 'Unknown Channel';
+      function normalizeCategory(value) {
+        return String(value || 'Sin categoría').trim() || 'Sin categoría';
+      }
 
-            const grupoMatch = lineAttributes.match(/group-title="([^"]+)"/i);
-            const grupo = grupoMatch ? grupoMatch[1].toLowerCase() : 'todo';
-            const logoMatch = lineAttributes.match(/tvg-logo="([^"]+)"/i);
-            const logo = logoMatch ? logoMatch[1] : '';
+      function safeUrl(value) {
+        try {
+          const parsed = new URL(String(value).trim(), window.location.href);
+          return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+        } catch (_) {
+          return '';
+        }
+      }
 
-            const userAgentMatch = lineAttributes.match(/x-user-agent="([^"]+)"/i);
-            const userAgent = userAgentMatch ? userAgentMatch[1] : '';
+      function cleanupPlayer() {
+        if (hls) {
+          hls.destroy();
+          hls = null;
+        }
+        videoPlayer.pause();
+        videoPlayer.removeAttribute('src');
+        videoPlayer.load();
+      }
 
-            const refererMatch = lineAttributes.match(/x-referer="([^"]+)"/i);
-            const referer = refererMatch ? refererMatch[1] : '';
+      function stopPlayback() {
+        cleanupPlayer();
+        canalActual = null;
+        infoCanal.textContent = 'Reproducción detenida';
+        renderChannels();
+      }
 
-            const originMatch = lineAttributes.match(/x-origin="([^"]+)"/i);
-            const origin = originMatch ? originMatch[1] : '';
+      function parseM3U(text) {
+        const lines = String(text).replace(/^\uFEFF/, '').split(/\r?\n/);
+        const result = [];
+        let pending = null;
 
-            const url = (chunk[j + 1] && chunk[j + 1].startsWith('http')) ? chunk[j + 1].trim() : '';
-            if (url) {
-              canais.push({ nome, grupo, url, logo, userAgent, referer, origin });
-              setCategorias.add(grupo);
-            }
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line) continue;
+
+          if (line.startsWith('#EXTINF:')) {
+            const comma = line.indexOf(',');
+            const attributes = comma >= 0 ? line.slice(0, comma) : line;
+            const name = comma >= 0
+              ? line.slice(comma + 1).trim()
+              : 'Canal sin nombre';
+            const group = attributes.match(/group-title=["']([^"']*)["']/i);
+            const logo = attributes.match(/tvg-logo=["']([^"']*)["']/i);
+
+            pending = {
+              nombre: name || 'Canal sin nombre',
+              grupo: normalizeCategory(group && group[1]),
+              logo: logo ? logo[1].trim() : ''
+            };
+          } else if (line.startsWith('#EXTGRP:') && pending) {
+            pending.grupo = normalizeCategory(line.slice(8));
+          } else if (!line.startsWith('#') && pending) {
+            const url = safeUrl(line);
+            if (url) result.push({ ...pending, url });
+            pending = null;
           }
         }
-        i += chunkSize;
-        await new Promise(resolve => setTimeout(resolve, 10));
+
+        return result;
       }
-      categorias = Array.from(setCategorias).sort();
-      generarBotoesCategorias();
-      if(canais.length > 0 && !videoPlayer.src) {
-        reproduzirStream(canais[0]);
-      }
-      loadingMessage.style.display = 'none';
-      mostrarCanais(categoriaAtual);
-    }
 
-    function crearBotao(texto, classes, onClick) {
-      const btn = document.createElement('button');
-      btn.className = classes;
-      btn.textContent = texto;
-      btn.onclick = onClick;
-      return btn;
-    }
+      function parseJSON(text) {
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) {
+          throw new Error('El JSON debe contener una lista de canales.');
+        }
 
-    function generarBotoesCategorias() {
-        Array.from(sidebar.children).forEach(child => {
-            if (child.classList.contains('dinamica') && child.textContent !== '📺 Todos os Canais') {
-                child.remove();
-            }
-        });
+        return data.map(item => {
+          if (!item || !item.url) return null;
+          const url = safeUrl(item.url);
+          if (!url) return null;
 
-        const targetElement = document.querySelector('label[for=fileInput]');
-        categorias.forEach(cat => {
-            const textoCat = '📂 ' + cat.charAt(0).toUpperCase() + cat.slice(1);
-            const btn = crearBotao(textoCat, 'btn dinamica', () => mostrarCanais(cat));
-            sidebar.insertBefore(btn, targetElement);
-        });
-    }
-
-    function mostrarCanais(categoria) {
-      categoriaAtual = categoria;
-      listaCanais.innerHTML = '';
-      let listaFiltrada;
-      if (categoria === 'Todos') {
-        listaFiltrada = canais;
-      } else {
-        listaFiltrada = canais.filter(c => c.grupo === categoria);
-      }
-      const fragment = document.createDocumentFragment();
-      listaFiltrada.forEach(canal => {
-        const li = document.createElement('li');
-        if (canal.logo) {
-          const img = document.createElement('img');
-          img.src = canal.logo;
-          img.alt = canal.nome;
-          img.loading = 'lazy';
-          img.onerror = function() {
-              this.onerror=null;
-              this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCAxMDAgNjAiPgogIDxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNjAiIGZpbGw9IiMwMDMwNjAiLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEycHgiIGZpbGw9IiMwMGJmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIwLjNlbSI+Tk8gTE9HTzwvdGV4dD4KPC9zdmc+';
-              this.style.filter = 'grayscale(100%)';
+          return {
+            nombre: String(item.name || item.nombre || 'Canal sin nombre').trim(),
+            grupo: normalizeCategory(item.group || item.grupo),
+            logo: safeUrl(item.logo || '') || '',
+            url
           };
-          li.appendChild(img);
+        }).filter(Boolean);
+      }
+
+      function parsePlaylist(text, filename = '') {
+        const trimmed = String(text).trim();
+        const ext = filename.toLowerCase().split('.').pop();
+
+        if (ext === 'json' || trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          return parseJSON(trimmed);
         }
-        const spanNome = document.createElement('span');
-        spanNome.textContent = canal.nome;
-        li.appendChild(spanNome);
-        li.onclick = () => reproduzirStream(canal);
-        fragment.appendChild(li);
-      });
-      listaCanais.appendChild(fragment);
-      listaCanais.classList.remove('grade', 'grade-2col');
-      if (modoExibicao === 1) {
-        listaCanais.classList.add('grade');
-        toggleViewBtn.textContent = '🔲 Modo Cuadricula (3 col)';
-      } else if (modoExibicao === 2) {
-        listaCanais.classList.add('grade-2col');
-        toggleViewBtn.textContent = '🔲 Modo Cuadricula Compacta (2 col)';
-      } else {
-        toggleViewBtn.textContent = '📋 Modo Lista (1 col)';
-      }
-    }
 
-    function toggleView() {
-      modoExibicao = (modoExibicao + 1) % 3;
-      mostrarCanais(categoriaAtual);
-    }
-
-    function formatarURL(url) {
-      if (!url.toLowerCase().includes('.m3u8') && !url.toLowerCase().includes('/live/')) {
-        const padrao = /\/(\w+)\/(\w+)\/(\d+)$/;
-        const match = url.match(padrao);
-        if (match) {
-          const [_, usuario, senha, canal] = match;
-          const protocolo = url.startsWith('https') ? 'https://' : 'http://';
-          const hostPort = url.split('/')[2];
-          return `${protocolo}${hostPort}/live/${usuario}/${senha}/${canal}.m3u8`;
+        if (trimmed.includes('#EXTM3U') || trimmed.includes('#EXTINF:')) {
+          return parseM3U(trimmed);
         }
-      }
-      return url;
-    }
 
-    function reproduzirStream(canal) {
-      const { url, nome, userAgent, referer, origin } = canal;
+        if (trimmed.includes('#EXTGRP:')) return parseM3U(trimmed);
 
-      canalAtual = nome || '';
-      infoCanal.textContent = `📺 Reproduciendo: ${canalAtual}`;
-
-      let streamToPlay = formatarURL(url);
-
-      // Construct proxy URL if custom headers are needed AND CORS_PROXY_URL is configured
-      if ((userAgent || referer || origin || shouldUseProxy(streamToPlay)) && CORS_PROXY_URL && CORS_PROXY_URL !== 'YOUR_CORS_PROXY_URL_HERE') {
-          let proxyParams = [];
-          proxyParams.push(`url=${encodeURIComponent(streamToPlay)}`);
-          if (userAgent) proxyParams.push(`ua=${encodeURIComponent(userAgent)}`);
-          if (referer) proxyParams.push(`referer=${encodeURIComponent(referer)}`);
-          if (origin) proxyParams.push(`origin=${encodeURIComponent(origin)}`);
-          streamToPlay = `${CORS_PROXY_URL}?${proxyParams.join('&')}`; // Use '?' for query string
-          console.log(`Using proxy for stream with headers: ${streamToPlay}`);
-      } else if ((userAgent || referer || origin || shouldUseProxy(streamToPlay)) && (!CORS_PROXY_URL || CORS_PROXY_URL === 'YOUR_CORS_PROXY_URL_HERE')) {
-          console.warn('CORS_PROXY_URL não configurado! Cabeçalhos personalizados (User-Agent, Referer, Origin) ou proxy para URL externa NÃO serão aplicados para este stream. A reprodução pode falhar.');
+        throw new Error('Formato no reconocido. Usa una lista M3U/M3U8, W3U compatible o JSON.');
       }
 
-      if (hls && hls.url === streamToPlay) {
-        videoPlayer.play().catch(() => {});
-        return;
-      }
-      if (hls) {
-        hls.destroy();
-        hls = null;
-      }
+      function loadChannels(nextChannels) {
+        canales = nextChannels;
+        categoriaActual = 'Todos';
+        searchInput.value = '';
+        buildCategories();
+        renderChannels();
 
-      if (streamToPlay.match(/\.(mp4|webm|ogg|avi|mov|mkv|flv)$/i)) {
-          videoPlayer.src = streamToPlay;
-          videoPlayer.addEventListener('loadedmetadata', () => {
-              videoPlayer.play().catch(() => {});
-          }, { once: true });
+        if (!canales.length) {
+          infoCanal.textContent = 'No se encontraron canales válidos';
+          setStatus('La lista se ha leído, pero no contiene canales con URLs HTTP/HTTPS válidas.', true);
           return;
-      }
-
-      if (Hls.isSupported()) {
-        hls = new Hls({
-          maxBufferLength: 30,
-          enableWorker: true,
-          manifestLoadingTimeOut: 10000,
-          manifestLoadingMaxRetry: 3,
-          levelLoadingTimeOut: 10000,
-          levelLoadingMaxRetry: 3,
-          liveSyncDuration: 15,
-          liveMaxLatencyDuration: 30
-        });
-        hls.url = streamToPlay;
-        hls.loadSource(streamToPlay);
-        hls.attachMedia(videoPlayer);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          videoPlayer.play().catch(() => {});
-        });
-        hls.on(Hls.Events.ERROR, function (event, data) {
-          if (data.fatal) {
-            console.error('Fatal HLS error:', data);
-            switch(data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                alert('Error De Red: No a sido posible cargar el stream.Prueba Activando Un VPN.');
-                hls.destroy();
-                hls = null;
-                break;
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                alert('Error de media: Problema con la reproduccion del stream. Intentando recuperar...');
-                hls.recoverMediaError();
-                break;
-              default:
-                alert('Error fatal no se puede reproducir el stream: ' + data.details);
-                hls.destroy();
-                hls = null;
-                break;
-            }
-          } else {
-             console.warn('Non-fatal HLS error:', data);
-          }
-        });
-      } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-        if (videoPlayer.src !== streamToPlay) {
-          videoPlayer.src = streamToPlay;
         }
-        videoPlayer.addEventListener('loadedmetadata', () => {
-          videoPlayer.play().catch(() => {});
-        }, { once: true });
-      } else {
-        alert("Este navegador no soporta reproducción de stream HLS (.m3u8) ni otros formatos directos. Utilize un navegador diferente como Chrome, Firefox o Safari.");
+
+        setStatus(`Lista cargada: ${canales.length} canal(es).`);
+
+        if (canales.length === 1) {
+          playChannel(canales[0]);
+        } else {
+          infoCanal.textContent = `${canales.length} canales disponibles`;
+        }
       }
-    }
 
-    function limpiarLista() {
-      listaCanais.innerHTML = '';
-      canais = [];
-      categorias = [];
-      infoCanal.textContent = '';
-      videoPlayer.pause();
-      videoPlayer.removeAttribute('src');
-      videoPlayer.load();
-      if(hls) {
-        hls.destroy();
-        hls = null;
+      function buildCategories() {
+        const cats = [...new Set(canales.map(c => c.grupo))]
+          .sort((a, b) => a.localeCompare(b, 'es'));
+
+        categoryList.replaceChildren();
+
+        const all = document.createElement('button');
+        all.className = 'category-btn';
+        all.type = 'button';
+        all.dataset.category = 'Todos';
+        all.textContent = '📺 Todos los canales';
+        all.classList.toggle('active', categoriaActual === 'Todos');
+        categoryList.appendChild(all);
+
+        for (const cat of cats) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'category-btn';
+          button.dataset.category = cat;
+          button.textContent = '📂 ' + cat;
+          button.classList.toggle('active', categoriaActual === cat);
+          categoryList.appendChild(button);
+        }
       }
-      generarBotoesCategorias();
-    }
 
-    function alternarTema() {
-      document.body.classList.toggle('tema-dark');
-    }
+      function renderChannels() {
+        const query = searchInput.value.trim().toLocaleLowerCase('es');
 
-    // Initial load
-    document.addEventListener('DOMContentLoaded', () => {
-      generarBotoesCategorias();
+        const filtered = canales.filter(c =>
+          (categoriaActual === 'Todos' || c.grupo === categoriaActual) &&
+          c.nombre.toLocaleLowerCase('es').includes(query)
+        );
 
-      if (AUTO_LOAD_URL) {
-        loadingMessage.style.display = 'block';
-        loadingMessage.textContent = 'Cargando lista inicial automaticamente...';
+        listaCanais.replaceChildren();
+        listaCanais.classList.toggle('grade', modoVista === 1);
+        listaCanais.classList.toggle('grade-2col', modoVista === 2);
 
-        fetchWithProxy(AUTO_LOAD_URL) // Use the new fetchWithProxy for auto-load
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP Error ${res.status}: ${res.statusText}`);
-                const contentType = res.headers.get('content-type') || '';
-                const lowerCaseUrl = AUTO_LOAD_URL.toLowerCase();
+        viewBtn.textContent = modoVista === 0 ? '🔲 Vista cuadrícula' :
+          modoVista === 1 ? '🔲 Cuadrícula compacta' : '📋 Vista lista';
 
-                if (contentType.includes('application/json') || lowerCaseUrl.endsWith('.json')) {
-                    return res.json().then(data => ({ type: 'json', data: data }));
-                } else {
-                    return res.text().then(data => ({ type: 'text', data: data }));
-                }
-            })
-            .then(({ type, data }) => {
-                if (type === 'json') {
-                    processarJSONData(data);
-                } else { // type is 'text'
-                    if (data.includes('#EXTM3U')) {
-                        processarM3UAsync(data);
-                    } else if (data.includes('#EXTGRP')) {
-                        processarW3UAsync(data);
-                    } else {
-                        console.warn('Conteúdo inicial não parece ser M3U ou W3U. Tentando processar como M3U de todos modos.');
-                        processarM3UAsync(data);
-                    }
-                }
-            })
-            .then(() => mostrarCanais('Todos'))
-            .catch(error => {
-                console.error("Error al cargar la lista automáticamente:", error);
-                alert("Lista de canales cargada automaticamente");
-            })
-            .finally(() => {
-                loadingMessage.style.display = 'none';
-                loadingMessage.textContent = 'Cargando lista... Por favor, Espere.';
+        listBtn.textContent = modoVista === 0 ? '📋 Vista lista' :
+          modoVista === 1 ? '🔲 Cuadrícula compacta' : '📋 Vista lista';
+
+        if (!filtered.length) {
+          const empty = document.createElement('li');
+          empty.className = 'empty-state';
+          empty.textContent = canales.length
+            ? 'No hay canales que coincidan con la búsqueda.'
+            : 'Carga una lista para ver los canales.';
+          listaCanais.appendChild(empty);
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        for (const canal of filtered) {
+          const li = document.createElement('li');
+          li.tabIndex = 0;
+          li.setAttribute('role', 'button');
+          li.setAttribute('aria-label', 'Reproducir ' + canal.nombre);
+          li.classList.toggle('selected', canalActual === canal);
+
+          if (canal.logo) {
+            const img = document.createElement('img');
+            img.src = canal.logo;
+            img.alt = '';
+            img.loading = 'lazy';
+            img.referrerPolicy = 'no-referrer';
+            img.onerror = () => img.remove();
+            li.appendChild(img);
+          }
+
+          const name = document.createElement('span');
+          name.textContent = canal.nombre;
+          li.appendChild(name);
+
+          li.addEventListener('click', () => playChannel(canal));
+          li.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              playChannel(canal);
+            }
+          });
+
+          fragment.appendChild(li);
+        }
+
+        listaCanais.appendChild(fragment);
+      }
+
+      function playChannel(canal) {
+        const url = safeUrl(canal.url);
+
+        if (!url) {
+          setStatus('La URL de este canal no es válida.', true);
+          return;
+        }
+
+        cleanupPlayer();
+        canalActual = canal;
+        infoCanal.textContent = '📺 Reproduciendo: ' + canal.nombre;
+        setLoading('Conectando con la emisión…');
+        renderChannels();
+
+        const isHls = /\.m3u8(?:$|[?#])/i.test(url) ||
+          /mpegurl/i.test(canal.type || '');
+
+        if (isHls && window.Hls && Hls.isSupported()) {
+          hls = new Hls({
+            enableWorker: true,
+            maxBufferLength: 30,
+            manifestLoadingTimeOut: 15000,
+            manifestLoadingMaxRetry: 2,
+            levelLoadingTimeOut: 15000,
+            fragLoadingTimeOut: 20000
+          });
+
+          hls.loadSource(url);
+          hls.attachMedia(videoPlayer);
+
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            hideLoading();
+            videoPlayer.play().catch(() => {
+              setStatus('Pulsa reproducir si el navegador bloquea la reproducción automática.');
             });
-      } else {
-          mostrarCanais('Todos');
+          });
+
+          hls.on(Hls.Events.ERROR, (_event, data) => {
+            if (!data.fatal) return;
+            hideLoading();
+
+            if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+              setStatus('Error de red al cargar la emisión. Comprueba la URL, la conexión y los permisos CORS del servidor.', true);
+              if (hls) {
+                hls.destroy();
+                hls = null;
+              }
+            } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+              setStatus('Problema de vídeo; intentando recuperar la reproducción…');
+              if (hls) hls.recoverMediaError();
+            } else {
+              setStatus('No se puede reproducir esta emisión (' + data.details + ').', true);
+              if (hls) {
+                hls.destroy();
+                hls = null;
+              }
+            }
+          });
+        } else {
+          videoPlayer.src = url;
+          videoPlayer.load();
+
+          const onReady = () => {
+            hideLoading();
+            videoPlayer.play().catch(() => {
+              setStatus('Pulsa reproducir para iniciar la emisión.');
+            });
+          };
+
+          videoPlayer.addEventListener('loadedmetadata', onReady, { once: true });
+
+          videoPlayer.addEventListener('error', () => {
+            hideLoading();
+            setStatus('No se pudo cargar la emisión. Puede estar caída, protegida o bloqueada por el servidor.', true);
+          }, { once: true });
+
+          if (isHls && !videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            hideLoading();
+            setStatus('Este navegador no admite HLS de forma nativa y hls.js no está disponible. Comprueba tu conexión a Internet.', true);
+          }
+        }
       }
-    });
+      async function loadUrl() {
+        const url = safeUrl(urlInputSidebar.value);
+
+        if (!url) {
+          setStatus('Introduce una URL HTTP o HTTPS válida.', true);
+          return;
+        }
+
+        setLoading('Descargando lista…');
+
+        try {
+          const response = await fetch(url);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+          }
+
+          const text = await response.text();
+          const parsed = parsePlaylist(text, url.split(/[?#]/)[0]);
+
+          ultimaFuente = { type: 'url', value: url };
+          loadChannels(parsed);
+          urlInputSidebar.value = '';
+        } catch (error) {
+          setStatus(
+            'No se pudo cargar la lista: ' + error.message +
+            '. Si aparece un error CORS, el servidor debe permitir el acceso desde esta página.',
+            true
+          );
+        } finally {
+          hideLoading();
+        }
+      }
+
+      async function loadFile(file) {
+        if (!file) return;
+
+        setLoading('Leyendo archivo…');
+
+        try {
+          const text = await file.text();
+          const parsed = parsePlaylist(text, file.name);
+
+          ultimaFuente = { type: 'file', file };
+          loadChannels(parsed);
+        } catch (error) {
+          setStatus('No se pudo leer el archivo: ' + error.message, true);
+        } finally {
+          hideLoading();
+          fileInput.value = '';
+        }
+      }
+
+      async function restartList() {
+        if (!ultimaFuente) {
+          setStatus('Primero carga una lista desde un archivo o una URL.', true);
+          return;
+        }
+
+        if (ultimaFuente.type === 'url') {
+          urlInputSidebar.value = ultimaFuente.value;
+          await loadUrl();
+        } else {
+          await loadFile(ultimaFuente.file);
+        }
+      }
+
+      fileInput.addEventListener('change', () => loadFile(fileInput.files[0]));
+
+      document.getElementById('loadUrlBtn').addEventListener('click', loadUrl);
+
+      urlInputSidebar.addEventListener('keydown', event => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+          loadUrl();
+        }
+      });
+
+      categoryList.addEventListener('click', event => {
+        const button = event.target.closest('button[data-category]');
+        if (!button) return;
+
+        categoriaActual = button.dataset.category;
+        buildCategories();
+        renderChannels();
+      });
+
+      searchInput.addEventListener('input', renderChannels);
+
+      viewBtn.addEventListener('click', () => {
+        modoVista = (modoVista + 1) % 3;
+        renderChannels();
+      });
+
+      listBtn.addEventListener('click', () => {
+        modoVista = 0;
+        renderChannels();
+      });
+
+      document.getElementById('stopBtn').addEventListener('click', stopPlayback);
+      document.getElementById('restartBtn').addEventListener('click', restartList);
+
+      videoPlayer.addEventListener('playing', () => {
+        hideLoading();
+        setStatus('');
+      });
+
+      videoPlayer.addEventListener('waiting', () => setLoading('Cargando vídeo…'));
+
+      videoPlayer.addEventListener('pause', () => {
+        if (videoPlayer.currentSrc) hideLoading();
+      });
+
+      buildCategories();
+      renderChannels();
+
+      // Intentar cargar la lista predeterminada al iniciar.
+      if (AUTO_LOAD_URL) {
+        urlInputSidebar.value = AUTO_LOAD_URL;
+        loadUrl();
+      }
+    })();
   </script>
 </body>
-</html>
+</html>	  
