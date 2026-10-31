@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#000000">
   <title>SUPERVECTAR IPTV</title>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.8.0/dist/mpegts.min.js"></script>
   <style>
     :root {
       color-scheme: dark;
@@ -183,7 +184,83 @@
       video { max-height: 38vh; }
       .canais-wrapper { min-height: 100px; max-height: none; }
     }
-  </style>
+
+
+    /* Escritorio: categorías izquierda, reproductor centro, canales derecha */
+    @media (min-width: 1000px) {
+      body { display:grid; grid-template-columns:250px minmax(360px,1fr) minmax(280px,340px); height:100vh; overflow:hidden; }
+      .sidebar { grid-column:1; grid-row:1; width:auto; min-width:0; height:100vh; overflow-y:auto; }
+      .content { display:contents; }
+      .top-header { grid-column:2; grid-row:1; align-self:start; padding:18px 12px 0; }
+      .player-area { grid-column:2; grid-row:2 / 4; width:100%; min-width:0; margin:0; align-self:start; }
+      video { max-height:min(58vh,560px); }
+      .list-toolbar { grid-column:3; grid-row:1; align-self:end; padding:14px 12px 8px 0; min-width:0; }
+      .list-toolbar .btn { display:none; }
+      .canais-wrapper { grid-column:3; grid-row:2 / 4; min-height:0; max-height:none; margin:0 12px 12px 0; }
+      #listaCanais.grade li, #listaCanais.grade-2col li { flex:0 0 100%; max-width:100%; min-width:0; flex-direction:row; text-align:left; }
+      #listaCanais.grade li img, #listaCanais.grade-2col li img { width:56px; height:38px; }
+      #listaCanais.grade li span, #listaCanais.grade-2col li span { white-space:nowrap; }
+    }
+    @media (min-width:851px) and (max-width:999px) {
+      .content { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(230px,1fr); grid-template-rows:auto auto minmax(0,1fr); gap:12px; min-height:0; }
+      .top-header { grid-column:1 / -1; }
+      .player-area { grid-column:1; grid-row:2 / 4; width:100%; min-width:0; margin:0; }
+      .list-toolbar { grid-column:2; grid-row:2; min-width:0; }
+      .list-toolbar .btn { display:none; }
+      .canais-wrapper { grid-column:2; grid-row:3; min-height:0; max-height:none; }
+      #listaCanais.grade li, #listaCanais.grade-2col li { flex-basis:100%; max-width:100%; min-width:0; }
+    }
+    @media (max-width:850px) {
+      body { display:flex; flex-direction:column; height:auto; min-height:100vh; overflow:auto; }
+      .sidebar { width:100%; min-width:0; max-height:none; }
+      .content { display:flex; flex-direction:column; overflow:visible; }
+      .player-area { order:0; }
+      .list-toolbar { order:1; }
+      .canais-wrapper { order:2; min-height:220px; max-height:55vh; }
+    }
+
+  
+/* SUPERVECTAR IPTV: layout responsive */
+* { box-sizing:border-box; }
+html,body { width:100%; min-width:0; margin:0; }
+@media (min-width:1050px) {
+ body { display:grid!important; grid-template-columns:clamp(225px,19vw,290px) minmax(0,1fr)!important; height:100vh!important; min-height:0!important; overflow:hidden!important; }
+ .sidebar { grid-column:1; grid-row:1; width:auto!important; min-width:0!important; height:100vh!important; max-height:100vh!important; overflow-y:auto!important; overflow-x:hidden!important; }
+ .content { grid-column:2; grid-row:1; display:grid!important; grid-template-columns:minmax(0,1fr) minmax(275px,34%)!important; grid-template-rows:auto minmax(0,1fr)!important; gap:12px!important; width:100%!important; height:100vh!important; min-width:0!important; min-height:0!important; margin:0!important; padding:12px!important; overflow:hidden!important; }
+ .top-header { grid-column:1/-1; grid-row:1; min-width:0!important; padding:0 0 4px!important; }
+ .player-area { grid-column:1; grid-row:2; width:100%!important; min-width:0!important; min-height:0!important; margin:0!important; }
+ .player-area video,video { display:block; width:100%!important; max-width:100%!important; height:auto!important; max-height:58vh!important; aspect-ratio:16/9; }
+ .list-toolbar { grid-column:2; grid-row:1; width:100%!important; min-width:0!important; align-self:end!important; margin:0!important; }
+ .list-toolbar .btn { display:none!important; }
+ .canais-wrapper { grid-column:2; grid-row:2; width:100%!important; height:100%!important; min-width:0!important; min-height:0!important; max-height:none!important; margin:0!important; overflow-y:auto!important; overflow-x:hidden!important; }
+ #listaCanais { width:100%!important; min-width:0!important; }
+ #listaCanais li { min-width:0!important; max-width:100%!important; flex:0 0 100%!important; flex-direction:row!important; text-align:left!important; }
+ #listaCanais li img { width:48px!important; height:34px!important; flex:0 0 48px!important; object-fit:contain; }
+ #listaCanais li span { min-width:0!important; overflow:hidden!important; text-overflow:ellipsis!important; white-space:nowrap!important; }
+}
+@media (min-width:851px) and (max-width:1049px) {
+ body { display:grid!important; grid-template-columns:210px minmax(0,1fr)!important; height:100vh!important; min-height:0!important; overflow:hidden!important; }
+ .sidebar { grid-column:1; grid-row:1; width:auto!important; min-width:0!important; height:100vh!important; overflow-y:auto!important; }
+ .content { grid-column:2; grid-row:1; display:grid!important; grid-template-columns:minmax(0,1fr) minmax(225px,38%)!important; grid-template-rows:auto minmax(0,1fr)!important; gap:10px!important; padding:10px!important; width:100%!important; height:100vh!important; min-width:0!important; min-height:0!important; overflow:hidden!important; }
+ .top-header { grid-column:1/-1; grid-row:1; }
+ .player-area { grid-column:1; grid-row:2; width:100%!important; min-width:0!important; margin:0!important; }
+ .player-area video,video { width:100%!important; max-height:48vh!important; }
+ .list-toolbar { grid-column:2; grid-row:1; min-width:0!important; }
+ .list-toolbar .btn { display:none!important; }
+ .canais-wrapper { grid-column:2; grid-row:2; width:100%!important; height:100%!important; min-width:0!important; min-height:0!important; max-height:none!important; overflow-y:auto!important; }
+ #listaCanais li { flex-basis:100%!important; max-width:100%!important; }
+}
+@media (max-width:850px) {
+ body { display:flex!important; flex-direction:column!important; width:100%!important; height:auto!important; min-height:100vh!important; overflow:auto!important; }
+ .sidebar { width:100%!important; min-width:0!important; max-height:36vh!important; overflow-y:auto!important; }
+ .content { display:flex!important; flex-direction:column!important; width:100%!important; height:auto!important; min-height:0!important; padding:10px!important; overflow:visible!important; }
+ .top-header { order:0; }
+ .player-area { order:1; width:100%!important; margin:0!important; }
+ .list-toolbar { order:2; width:100%!important; }
+ .canais-wrapper { order:3; width:100%!important; min-height:220px!important; max-height:52vh!important; overflow-y:auto!important; }
+}
+
+</style>
 </head>
 <body>
   <aside class="sidebar" id="sidebar">
@@ -225,13 +302,12 @@
       <input type="search" id="searchInput" placeholder="Buscar canal…" aria-label="Buscar canal">
       <button class="btn" id="listBtn" type="button">📋 Vista lista</button>
     </div>
-    <div class="canais-wrapper">
-      <ul id="listaCanais">
-        <li class="empty-state">Carga una lista para ver los canales.</li>
-      </ul>
-    </div>
+    <section class="canais-wrapper" aria-label="Lista de canales">
+      <ul id="listaCanais"><li class="empty-state">Carga una lista para ver los canales.</li></ul>
+    </section>
   </main>
-   <script>
+
+  <script>
     (() => {
       'use strict';
 
@@ -251,76 +327,68 @@
       let categoriaActual = 'Todos';
       let canalActual = null;
       let hls = null;
-      let modoVista = 0;
+      let mpegtsPlayer = null;
+      let modoVista = 0; // 0 lista, 1 cuadrícula, 2 cuadrícula compacta
       let ultimaFuente = null;
 
-      // Lista predeterminada; el servidor debe permitir solicitudes CORS.
-      const AUTO_LOAD_URL = 'http://mitv.netinc.org:8691/get.php?username=697222878p9&password=Sw4qyXXVUTEH&type=m3u_plus';
+      // Por seguridad no se incrustan credenciales en el HTML público.
+      // Pega la URL de tu lista manualmente en el campo de carga.
 
       function setLoading(message = 'Cargando…') {
         loadingMessage.textContent = message;
         loadingMessage.style.display = 'block';
         setStatus('');
       }
-
-      function hideLoading() {
-        loadingMessage.style.display = 'none';
-      }
-
+      function hideLoading() { loadingMessage.style.display = 'none'; }
       function setStatus(message, isError = false) {
         statusMessage.textContent = message;
         statusMessage.classList.toggle('error', isError);
         statusMessage.style.display = message ? 'block' : 'none';
       }
-
       function normalizeCategory(value) {
         return String(value || 'Sin categoría').trim() || 'Sin categoría';
       }
-
       function safeUrl(value) {
         try {
           const parsed = new URL(String(value).trim(), window.location.href);
           return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
-        } catch (_) {
-          return '';
-        }
+        } catch (_) { return ''; }
       }
-
       function cleanupPlayer() {
         if (hls) {
           hls.destroy();
           hls = null;
         }
+        if (mpegtsPlayer) {
+          try { mpegtsPlayer.pause(); } catch (_) {}
+          mpegtsPlayer.unload();
+          mpegtsPlayer.detachMediaElement();
+          mpegtsPlayer.destroy();
+          mpegtsPlayer = null;
+        }
         videoPlayer.pause();
         videoPlayer.removeAttribute('src');
         videoPlayer.load();
       }
-
       function stopPlayback() {
         cleanupPlayer();
         canalActual = null;
         infoCanal.textContent = 'Reproducción detenida';
         renderChannels();
       }
-
       function parseM3U(text) {
         const lines = String(text).replace(/^\uFEFF/, '').split(/\r?\n/);
         const result = [];
         let pending = null;
-
         for (const rawLine of lines) {
           const line = rawLine.trim();
           if (!line) continue;
-
           if (line.startsWith('#EXTINF:')) {
             const comma = line.indexOf(',');
             const attributes = comma >= 0 ? line.slice(0, comma) : line;
-            const name = comma >= 0
-              ? line.slice(comma + 1).trim()
-              : 'Canal sin nombre';
+            const name = comma >= 0 ? line.slice(comma + 1).trim() : 'Canal sin nombre';
             const group = attributes.match(/group-title=["']([^"']*)["']/i);
             const logo = attributes.match(/tvg-logo=["']([^"']*)["']/i);
-
             pending = {
               nombre: name || 'Canal sin nombre',
               grupo: normalizeCategory(group && group[1]),
@@ -334,21 +402,15 @@
             pending = null;
           }
         }
-
         return result;
       }
-
       function parseJSON(text) {
         const data = JSON.parse(text);
-        if (!Array.isArray(data)) {
-          throw new Error('El JSON debe contener una lista de canales.');
-        }
-
+        if (!Array.isArray(data)) throw new Error('El JSON debe contener una lista de canales.');
         return data.map(item => {
           if (!item || !item.url) return null;
           const url = safeUrl(item.url);
           if (!url) return null;
-
           return {
             nombre: String(item.name || item.nombre || 'Canal sin nombre').trim(),
             grupo: normalizeCategory(item.group || item.grupo),
@@ -357,52 +419,35 @@
           };
         }).filter(Boolean);
       }
-
       function parsePlaylist(text, filename = '') {
         const trimmed = String(text).trim();
         const ext = filename.toLowerCase().split('.').pop();
-
         if (ext === 'json' || trimmed.startsWith('[') || trimmed.startsWith('{')) {
           return parseJSON(trimmed);
         }
-
-        if (trimmed.includes('#EXTM3U') || trimmed.includes('#EXTINF:')) {
-          return parseM3U(trimmed);
-        }
-
+        if (trimmed.includes('#EXTM3U') || trimmed.includes('#EXTINF:')) return parseM3U(trimmed);
+        // Some W3U playlists use the same EXTINF structure.
         if (trimmed.includes('#EXTGRP:')) return parseM3U(trimmed);
-
         throw new Error('Formato no reconocido. Usa una lista M3U/M3U8, W3U compatible o JSON.');
       }
-
-      function loadChannels(nextChannels) {
+      function loadChannels(nextChannels, sourceLabel = 'lista') {
         canales = nextChannels;
         categoriaActual = 'Todos';
         searchInput.value = '';
         buildCategories();
         renderChannels();
-
         if (!canales.length) {
           infoCanal.textContent = 'No se encontraron canales válidos';
           setStatus('La lista se ha leído, pero no contiene canales con URLs HTTP/HTTPS válidas.', true);
           return;
         }
-
         setStatus(`Lista cargada: ${canales.length} canal(es).`);
-
-        if (canales.length === 1) {
-          playChannel(canales[0]);
-        } else {
-          infoCanal.textContent = `${canales.length} canales disponibles`;
-        }
+        if (canales.length === 1) playChannel(canales[0]);
+        else infoCanal.textContent = `${canales.length} canales disponibles`;
       }
-
       function buildCategories() {
-        const cats = [...new Set(canales.map(c => c.grupo))]
-          .sort((a, b) => a.localeCompare(b, 'es'));
-
+        const cats = [...new Set(canales.map(c => c.grupo))].sort((a, b) => a.localeCompare(b, 'es'));
         categoryList.replaceChildren();
-
         const all = document.createElement('button');
         all.className = 'category-btn';
         all.type = 'button';
@@ -410,7 +455,6 @@
         all.textContent = '📺 Todos los canales';
         all.classList.toggle('active', categoriaActual === 'Todos');
         categoryList.appendChild(all);
-
         for (const cat of cats) {
           const button = document.createElement('button');
           button.type = 'button';
@@ -421,44 +465,33 @@
           categoryList.appendChild(button);
         }
       }
-
       function renderChannels() {
         const query = searchInput.value.trim().toLocaleLowerCase('es');
-
         const filtered = canales.filter(c =>
           (categoriaActual === 'Todos' || c.grupo === categoriaActual) &&
           c.nombre.toLocaleLowerCase('es').includes(query)
         );
-
         listaCanais.replaceChildren();
         listaCanais.classList.toggle('grade', modoVista === 1);
         listaCanais.classList.toggle('grade-2col', modoVista === 2);
-
         viewBtn.textContent = modoVista === 0 ? '🔲 Vista cuadrícula' :
           modoVista === 1 ? '🔲 Cuadrícula compacta' : '📋 Vista lista';
-
         listBtn.textContent = modoVista === 0 ? '📋 Vista lista' :
           modoVista === 1 ? '🔲 Cuadrícula compacta' : '📋 Vista lista';
-
         if (!filtered.length) {
           const empty = document.createElement('li');
           empty.className = 'empty-state';
-          empty.textContent = canales.length
-            ? 'No hay canales que coincidan con la búsqueda.'
-            : 'Carga una lista para ver los canales.';
+          empty.textContent = canales.length ? 'No hay canales que coincidan con la búsqueda.' : 'Carga una lista para ver los canales.';
           listaCanais.appendChild(empty);
           return;
         }
-
         const fragment = document.createDocumentFragment();
-
         for (const canal of filtered) {
           const li = document.createElement('li');
           li.tabIndex = 0;
           li.setAttribute('role', 'button');
           li.setAttribute('aria-label', 'Reproducir ' + canal.nombre);
           li.classList.toggle('selected', canalActual === canal);
-
           if (canal.logo) {
             const img = document.createElement('img');
             img.src = canal.logo;
@@ -468,11 +501,9 @@
             img.onerror = () => img.remove();
             li.appendChild(img);
           }
-
           const name = document.createElement('span');
           name.textContent = canal.nombre;
           li.appendChild(name);
-
           li.addEventListener('click', () => playChannel(canal));
           li.addEventListener('keydown', event => {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -480,16 +511,12 @@
               playChannel(canal);
             }
           });
-
           fragment.appendChild(li);
         }
-
         listaCanais.appendChild(fragment);
       }
-
       function playChannel(canal) {
         const url = safeUrl(canal.url);
-
         if (!url) {
           setStatus('La URL de este canal no es válida.', true);
           return;
@@ -499,10 +526,10 @@
         canalActual = canal;
         infoCanal.textContent = '📺 Reproduciendo: ' + canal.nombre;
         setLoading('Conectando con la emisión…');
+        setStatus('');
         renderChannels();
 
-        const isHls = /\.m3u8(?:$|[?#])/i.test(url) ||
-          /mpegurl/i.test(canal.type || '');
+        const isHls = /\\.m3u8(?:$|[?#])/i.test(url) || /mpegurl/i.test(canal.type || '');
 
         if (isHls && window.Hls && Hls.isSupported()) {
           hls = new Hls({
@@ -513,107 +540,90 @@
             levelLoadingTimeOut: 15000,
             fragLoadingTimeOut: 20000
           });
-
           hls.loadSource(url);
           hls.attachMedia(videoPlayer);
-
           hls.on(Hls.Events.MANIFEST_PARSED, () => {
             hideLoading();
-            videoPlayer.play().catch(() => {
-              setStatus('Pulsa reproducir si el navegador bloquea la reproducción automática.');
-            });
+            videoPlayer.play().catch(() => setStatus('Pulsa reproducir si el navegador bloquea la reproducción automática.'));
           });
-
           hls.on(Hls.Events.ERROR, (_event, data) => {
             if (!data.fatal) return;
             hideLoading();
-
-            if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-              setStatus('Error de red al cargar la emisión. Comprueba la URL, la conexión y los permisos CORS del servidor.', true);
-              if (hls) {
-                hls.destroy();
-                hls = null;
-              }
-            } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-              setStatus('Problema de vídeo; intentando recuperar la reproducción…');
-              if (hls) hls.recoverMediaError();
-            } else {
-              setStatus('No se puede reproducir esta emisión (' + data.details + ').', true);
-              if (hls) {
-                hls.destroy();
-                hls = null;
-              }
-            }
+            setStatus('No se pudo cargar HLS. Comprueba la URL y si el servidor permite CORS desde esta web.', true);
+            if (hls) { hls.destroy(); hls = null; }
           });
-        } else {
-          videoPlayer.src = url;
-          videoPlayer.load();
+          return;
+        }
 
-          const onReady = () => {
-            hideLoading();
-            videoPlayer.play().catch(() => {
-              setStatus('Pulsa reproducir para iniciar la emisión.');
+        // Los enlaces sin extensión conocida pueden ser MPEG-TS.
+        // mpegts.js necesita MediaSource y que el servidor permita las peticiones CORS.
+        if (!isHls && window.mpegts && mpegts.isSupported()) {
+          try {
+            mpegtsPlayer = mpegts.createPlayer(
+              { type: 'mpegts', url, isLive: true },
+              { enableWorker: true, lazyLoad: false, liveBufferLatencyChasing: true }
+            );
+            mpegtsPlayer.attachMediaElement(videoPlayer);
+            mpegtsPlayer.on(mpegts.Events.ERROR, (_type, _detail, _info) => {
+              hideLoading();
+              setStatus('No se pudo reproducir como MPEG-TS. El servidor debe permitir CORS y entregar un flujo compatible; revisa también el formato con tu proveedor.', true);
             });
-          };
-
-          videoPlayer.addEventListener('loadedmetadata', onReady, { once: true });
-
-          videoPlayer.addEventListener('error', () => {
-            hideLoading();
-            setStatus('No se pudo cargar la emisión. Puede estar caída, protegida o bloqueada por el servidor.', true);
-          }, { once: true });
-
-          if (isHls && !videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-            hideLoading();
-            setStatus('Este navegador no admite HLS de forma nativa y hls.js no está disponible. Comprueba tu conexión a Internet.', true);
+            mpegtsPlayer.on(mpegts.Events.LOADING_COMPLETE, () => hideLoading());
+            mpegtsPlayer.load();
+            const playPromise = mpegtsPlayer.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+              playPromise.catch(() => setStatus('Pulsa reproducir para iniciar la emisión.'));
+            }
+            return;
+          } catch (error) {
+            if (mpegtsPlayer) {
+              try { mpegtsPlayer.destroy(); } catch (_) {}
+              mpegtsPlayer = null;
+            }
+            setStatus('No se pudo iniciar el reproductor MPEG-TS: ' + error.message, true);
+            return;
           }
         }
+
+        // Reproducción nativa para formatos que el navegador sí admita.
+        videoPlayer.src = url;
+        videoPlayer.load();
+        videoPlayer.addEventListener('loadedmetadata', () => {
+          hideLoading();
+          videoPlayer.play().catch(() => setStatus('Pulsa reproducir para iniciar la emisión.'));
+        }, { once: true });
+        videoPlayer.addEventListener('error', () => {
+          hideLoading();
+          setStatus('El navegador no admite este formato o el servidor bloquea la reproducción web (CORS). Prueba desde una página HTTPS y consulta al proveedor por un enlace HLS compatible.', true);
+        }, { once: true });
       }
       async function loadUrl() {
         const url = safeUrl(urlInputSidebar.value);
-
         if (!url) {
           setStatus('Introduce una URL HTTP o HTTPS válida.', true);
           return;
         }
-
         setLoading('Descargando lista…');
-
         try {
           const response = await fetch(url);
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-          }
-
+          if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
           const text = await response.text();
           const parsed = parsePlaylist(text, url.split(/[?#]/)[0]);
-
           ultimaFuente = { type: 'url', value: url };
-          loadChannels(parsed);
+          loadChannels(parsed, 'URL');
           urlInputSidebar.value = '';
         } catch (error) {
-          setStatus(
-            'No se pudo cargar la lista: ' + error.message +
-            '. Si aparece un error CORS, el servidor debe permitir el acceso desde esta página.',
-            true
-          );
-        } finally {
-          hideLoading();
-        }
+          setStatus('No se pudo cargar la lista: ' + error.message + '. Si aparece un error CORS, el servidor debe permitir el acceso desde esta página.', true);
+        } finally { hideLoading(); }
       }
-
       async function loadFile(file) {
         if (!file) return;
-
         setLoading('Leyendo archivo…');
-
         try {
           const text = await file.text();
           const parsed = parsePlaylist(text, file.name);
-
           ultimaFuente = { type: 'file', file };
-          loadChannels(parsed);
+          loadChannels(parsed, file.name);
         } catch (error) {
           setStatus('No se pudo leer el archivo: ' + error.message, true);
         } finally {
@@ -621,13 +631,11 @@
           fileInput.value = '';
         }
       }
-
       async function restartList() {
         if (!ultimaFuente) {
           setStatus('Primero carga una lista desde un archivo o una URL.', true);
           return;
         }
-
         if (ultimaFuente.type === 'url') {
           urlInputSidebar.value = ultimaFuente.value;
           await loadUrl();
@@ -637,59 +645,31 @@
       }
 
       fileInput.addEventListener('change', () => loadFile(fileInput.files[0]));
-
       document.getElementById('loadUrlBtn').addEventListener('click', loadUrl);
-
       urlInputSidebar.addEventListener('keydown', event => {
-        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-          loadUrl();
-        }
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') loadUrl();
       });
-
       categoryList.addEventListener('click', event => {
         const button = event.target.closest('button[data-category]');
         if (!button) return;
-
         categoriaActual = button.dataset.category;
         buildCategories();
         renderChannels();
       });
-
       searchInput.addEventListener('input', renderChannels);
-
-      viewBtn.addEventListener('click', () => {
-        modoVista = (modoVista + 1) % 3;
-        renderChannels();
-      });
-
-      listBtn.addEventListener('click', () => {
-        modoVista = 0;
-        renderChannels();
-      });
-
+      viewBtn.addEventListener('click', () => { modoVista = (modoVista + 1) % 3; renderChannels(); });
+      listBtn.addEventListener('click', () => { modoVista = 0; renderChannels(); });
       document.getElementById('stopBtn').addEventListener('click', stopPlayback);
       document.getElementById('restartBtn').addEventListener('click', restartList);
-
-      videoPlayer.addEventListener('playing', () => {
-        hideLoading();
-        setStatus('');
-      });
-
+      videoPlayer.addEventListener('playing', () => { hideLoading(); setStatus(''); });
       videoPlayer.addEventListener('waiting', () => setLoading('Cargando vídeo…'));
-
-      videoPlayer.addEventListener('pause', () => {
-        if (videoPlayer.currentSrc) hideLoading();
-      });
+      videoPlayer.addEventListener('pause', () => { if (videoPlayer.currentSrc) hideLoading(); });
 
       buildCategories();
       renderChannels();
 
-      // Intentar cargar la lista predeterminada al iniciar.
-      if (AUTO_LOAD_URL) {
-        urlInputSidebar.value = AUTO_LOAD_URL;
-        loadUrl();
-      }
+      // La lista se carga manualmente para no publicar credenciales en GitHub Pages.
     })();
   </script>
 </body>
-</html>	  
+</html>
